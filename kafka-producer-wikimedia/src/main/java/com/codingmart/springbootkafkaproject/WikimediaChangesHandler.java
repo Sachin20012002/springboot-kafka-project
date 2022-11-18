@@ -1,0 +1,47 @@
+package com.codingmart.springbootkafkaproject;
+
+import com.launchdarkly.eventsource.EventHandler;
+import com.launchdarkly.eventsource.MessageEvent;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.kafka.core.KafkaTemplate;
+
+public class WikimediaChangesHandler implements EventHandler {
+    private static final Logger LOGGER = LoggerFactory.getLogger(WikimediaChangesHandler.class);
+
+    private final KafkaTemplate<String, String> kafkaTemplate;
+    private final String topic;
+
+    public WikimediaChangesHandler(KafkaTemplate<String, String> kafkaTemplate, String topicName) {
+        this.kafkaTemplate=kafkaTemplate;
+        this.topic=topicName;
+    }
+
+    @Override
+    public void onOpen() {
+
+    }
+
+    @Override
+    public void onClosed() {
+
+    }
+
+    @Override
+    public void onMessage(String s, MessageEvent messageEvent) {
+
+        LOGGER.info(String.format("event data -> %s", messageEvent.getData()));
+
+        kafkaTemplate.send(topic, messageEvent.getData());
+    }
+
+    @Override
+    public void onComment(String s) {
+
+    }
+
+    @Override
+    public void onError(Throwable throwable) {
+
+    }
+}
